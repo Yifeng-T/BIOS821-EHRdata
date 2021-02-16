@@ -48,35 +48,39 @@ def num_older_than(patients, age):
 
 #-----------------------------------------
 #for LabsCorePopulatedTable file:
-
-lab = {} # set initial_dictionary
-keylab = [] # set initial_list
+def load_labs(name):
+    lab = {} # set initial_dictionary
+    keylab = [] # set initial_list
 #read in data: using the dictionary to readin data one line by one line
 # time efficiency (O(n^2))
-with open('LabsCorePopulatedTable.txt') as stream:
-    datalines = stream.readlines()
-    keylab = datalines[0].split()
-    for i in keylab:
-        lab[i] = []
-    for j in datalines[1:]:
-        line_data = j.split('\t') #seperate by tab
-        for m in range(len(keylab)):
-            lab[keylab[m]].append(line_data[m])
-
-#find the patient_id value from dictionary: lab
-pati_id = lab['\ufeffPatientID']
+    with open(name) as stream:
+        datalines = stream.readlines()
+        keylab = datalines[0].split()
+        for i in keylab:
+            lab[i] = []
+        for j in datalines[1:]:
+            line_data = j.split('\t') #seperate by tab
+            for m in range(len(keylab)):
+                lab[keylab[m]].append(line_data[m])
+    pati_id = lab['\ufeffPatientID']
 #find the lab_name value from dictionary: lab
-lab_name = lab['LabName']
+    lab_name = lab['LabName']
 #find the test_value from dictionary: lab
 #change the string type to float
-lab_value = lab['LabValue']
-for i in range(0, len(lab_value)):
-    lab_value[i] = float(lab_value[i])
+    lab_value = lab['LabValue']
+    for i in range(0, len(lab_value)):
+        lab_value[i] = float(lab_value[i])
+    infor = []
+    infor = [pati_id, lab_name, lab_value]
+    return infor
 
-#define the function sick_patients(lab, gt_lt, value)
-#-------------------------------------------
-def sick_patients(lab, gt_lt, value): #time efficiency(O(n))
+lab_infor = load_labs('LabsCorePopulatedTable.txt')
+
+def sick_patients(lab_infor, lab, gt_lt, value): #time efficiency(O(n))
     sick = [] #define an initial list to store sick_patients id
+    pati_id = lab_infor[0]
+    lab_name = lab_infor[1]
+    lab_value = lab_infor[2]
     for k in range(len(lab_name)):
         if lab == lab_name[k]:
             if gt_lt == '>' and lab_value[k] > value:
@@ -85,7 +89,22 @@ def sick_patients(lab, gt_lt, value): #time efficiency(O(n))
                 sick.append(pati_id[k])
     return set(sick)
 
+def get_age(birth):
+    #define the date_format
+    date_format = '%Y-%m-%d %H:%M:%S.%f'
+    #change the birth variable_format string->date_variable
+    birth = datetime.strptime(birth, date_format)
+
+    #get the current date:
+    current_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S.%f')
+    current_date = datetime.strptime(current_date, date_format)
+    #get the date difference
+    day_diff = current_date - birth
+    age = day_diff/365.25
+    return (age)
+
 if __name__ == '__main__':
     print(num_older_than(patients, 51.2)) #====> 75
-    print(len(sick_patients("METABOLIC: ALBUMIN", ">", 4.0))) #=====> 100
+    print(len(sick_patients(lab_infor, "METABOLIC: ALBUMIN", ">", 4.0))) #=====> 100
+    print(get_age("1952-01-18 19:51:12.917000"))
 
