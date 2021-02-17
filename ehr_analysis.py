@@ -120,5 +120,5 @@ if __name__ == '__main__':
     print(get_age("1952-01-18 19:51:12.917000"))
     print(len(load_labs('LabsCorePopulatedTable.txt')))
     print(len(load_labs('LabsCorePopulatedTable.txt')[0]))
-
+    print(load_labs('LabsCorePopulatedTable.txt')[1][2])
 
