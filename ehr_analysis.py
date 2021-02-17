@@ -1,10 +1,10 @@
 #------------------------------------
 #for PatientCorePopulatedTable file:
-
 import datetime
 from datetime import datetime
 
 def load_patients(name):
+    # check the input value is a file name
     if not isinstance(name, str):
         raise ValueError(f"{name} is not a str file_name: input name should be your file name")
     pat = [] #set the initial list
@@ -30,11 +30,13 @@ patients = load_patients('PatientCorePopulatedTable.txt')
 
 
 def num_older_than(patients, age):
+    #check the input patients is a suffieicent list with patiens birth date
     if not isinstance(patients, list):
         raise ValueError(f"{patients} is not a sufficient list contains patients birth_date")
     for i in range(len(patients)):
         if not isinstance(patients[i], str):
             raise ValueError(f"{patients[i]} is not a string of birth_date of patient")
+    #check the input age is a sufficient number
     if not (isinstance(age, float) or isinstance(age, int)):
         raise ValueError(f"input_value:age {age} is not a sufficient number value")
     birth = patients
@@ -59,6 +61,8 @@ def num_older_than(patients, age):
 #-----------------------------------------
 #for LabsCorePopulatedTable file:
 def load_labs(name):
+    if not isinstance(name, str):
+        raise ValueError(f"input_value:file_name {name} is not a sufficient file_name string value")
     lab = {} # set initial_dictionary
     keylab = [] # set initial_list
 #read in data: using the dictionary to readin data one line by one line
@@ -87,6 +91,8 @@ def load_labs(name):
 lab_infor = load_labs('LabsCorePopulatedTable.txt')
 
 def sick_patients(lab_infor, lab, gt_lt, value): #time efficiency(O(n))
+    if not isinstance(lab_infor, list):
+        raise ValueError(f"input_value:lab_information {lab_infor} is not a sufficient list")
     sick = [] #define an initial list to store sick_patients id
     pati_id = lab_infor[0]
     lab_name = lab_infor[1]
@@ -100,6 +106,8 @@ def sick_patients(lab_infor, lab, gt_lt, value): #time efficiency(O(n))
     return set(sick)
 
 def get_age(birth):
+    if not isinstance(birth, str):
+        raise ValueError(f"input_value:birth {birth} is not a sufficient string_of_birthdate")
     #define the date_format
     date_format = '%Y-%m-%d %H:%M:%S.%f'
     #change the birth variable_format string->date_variable
