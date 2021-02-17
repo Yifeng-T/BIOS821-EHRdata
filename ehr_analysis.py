@@ -121,5 +121,4 @@ if __name__ == '__main__':
     print(len(load_labs('LabsCorePopulatedTable.txt')))
     print(len(load_labs('LabsCorePopulatedTable.txt')[0]))
     print(load_labs('LabsCorePopulatedTable.txt')[1][2])
-    print(load_labs('LabsCorePopulatedTable.txt')[1][3])
 
