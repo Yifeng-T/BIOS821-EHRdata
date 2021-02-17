@@ -93,6 +93,8 @@ lab_infor = load_labs('LabsCorePopulatedTable.txt')
 def sick_patients(lab_infor, lab, gt_lt, value): #time efficiency(O(n))
     if not isinstance(lab_infor, list):
         raise ValueError(f"input_value:lab_information {lab_infor} is not a sufficient list")
+    if not (isinstance(value, float) or isinstance(value, int)):
+        raise ValueError(f"input_value:value {value} is not a sufficient number value")
     sick = [] #define an initial list to store sick_patients id
     pati_id = lab_infor[0]
     lab_name = lab_infor[1]
@@ -119,13 +121,16 @@ def get_age(birth):
     #get the date difference
     day_diff = current_date - birth
     age = day_diff.days/365.25
+    if age<0:
+        raise ValueError(f"the input_age {birth} should be a past date_time ")
     age = round(age, 2)
     return (age)
 
 if __name__ == '__main__':
     print(num_older_than(patients, 51.2)) #====> 75
     print(len(sick_patients(lab_infor, "METABOLIC: ALBUMIN", ">", 4.0))) #=====> 100
-    print(get_age("1952-01-18 19:51:12.917000"))
+    print(get_age("1957-01-18 19:51:12.917000"))
     print(len(load_labs('LabsCorePopulatedTable.txt')))
-    print(len(load_labs('LabsCorePopulatedTable.txt')[0]))
+    print(load_labs('LabsCorePopulatedTable.txt')[0][0])
+    print(load_patients('PatientCorePopulatedTable.txt')[0])
 
