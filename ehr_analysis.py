@@ -5,6 +5,8 @@ import datetime
 from datetime import datetime
 
 def load_patients(name):
+    if not isinstance(name, str):
+        raise ValueError(f"{name} is not a str file_name: input name should be your file name")
     pat = [] #set the initial list
     data_table = {} #set the initial dictionary
     #read in data with time efficiency O(n^2+n+2)===>O(n^2)
@@ -23,10 +25,18 @@ def load_patients(name):
                 
     
     return data_table['PatientDateOfBirth']
+
 patients = load_patients('PatientCorePopulatedTable.txt')
 
 
 def num_older_than(patients, age):
+    if not isinstance(patients, list):
+        raise ValueError(f"{patients} is not a sufficient list contains patients birth_date")
+    for i in range(len(patients)):
+        if not isinstance(patients[i], str):
+            raise ValueError(f"{patients[i]} is not a string of birth_date of patient")
+    if not (isinstance(age, float) or isinstance(age, int)):
+        raise ValueError(f"input_value:age {age} is not a sufficient number value")
     birth = patients
     
     date_format = '%Y-%m-%d %H:%M:%S.%f'
@@ -100,11 +110,15 @@ def get_age(birth):
     current_date = datetime.strptime(current_date, date_format)
     #get the date difference
     day_diff = current_date - birth
-    age = day_diff/365.25
+    age = day_diff.days/365.25
+    age = round(age, 2)
     return (age)
 
 if __name__ == '__main__':
     print(num_older_than(patients, 51.2)) #====> 75
     print(len(sick_patients(lab_infor, "METABOLIC: ALBUMIN", ">", 4.0))) #=====> 100
     print(get_age("1952-01-18 19:51:12.917000"))
+    print(len(load_labs('LabsCorePopulatedTable.txt')))
+    print(len(load_labs('LabsCorePopulatedTable.txt')[0]))
+    print(load_labs('LabsCorePopulatedTable.txt')[1][2])
 
