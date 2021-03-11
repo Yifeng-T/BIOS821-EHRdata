@@ -28,6 +28,10 @@ Examples:
 ```patient2 = Patient("220C8D43-1322-4A9D-B890-D426942A3649", "Female", "1957-01-18 19:51:12.917000", "african")```
 <br>
 Patient1 plot saved as ""Urbc_over_time.png"" and Patient2 plot saved as ""Uph_over_time.png"", you can reach to these two graphs in the folder.
+<br>
+<br>
+If```patient1 < patient```=======>
+returns: "first patient not younger than other"
 
 ## In the observation class:
 It records obeservation id, lab, and test value.
