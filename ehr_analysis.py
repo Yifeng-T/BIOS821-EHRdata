@@ -1,5 +1,6 @@
 #------------------------------------
 #for PatientCorePopulatedTable file:
+
 import datetime
 from datetime import datetime
 
@@ -121,8 +122,11 @@ def get_age(birth):
     #get the date difference
     day_diff = current_date - birth
     age = day_diff.days/365.25
+
+    #the inpit birth should be a past_date time
     if age<0:
         raise ValueError(f"the input_age {birth} should be a past date_time ")
+    
     age = round(age, 2)
     return (age)
 
