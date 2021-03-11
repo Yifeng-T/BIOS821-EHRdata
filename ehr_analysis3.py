@@ -22,13 +22,13 @@ class Patient():
         self.gender = sex
         self.DOB = datetime.strptime(birth, date_format)
         self.race = race
-        self.lab = 0
 
         #define the current date:
         current_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S.%f')
         current_date = datetime.strptime(current_date, date_format)
         # self.age is a time value
-        self.age = current_date - self.DOB
+        total_age = current_date - self.DOB
+        self.age = round(total_age.days/365.25, 2)
     
     @property
     def Age(self):
@@ -39,16 +39,16 @@ class Patient():
     def __lt__(self, other):
         """working comparison operators for less than '<'"""
         if isinstance(other, Patient): # check other ===? patient class
-            age1_sec = self.age.total_seconds()
-            age2_sec = other.age.total_seconds()
-            if age1_sec < age2_sec:
+            age1 = self.age
+            age2 = other.age
+            if age1 < age2:
                 return "first patient younger than other"
             else:
                 return "first patient not younger than other"
         elif isinstance(other, float): # check other ===? float
-            age1_sec = self.age.total_seconds()
-            age2_sec = other * 31536000 # change the year unit ===> second unit
-            if age1_sec < age2_sec:
+            age1 = self.age
+            age2 = other.age 
+            if age1 < age2:
                 return "first patient younger than other"
             else:
                 return "first patient not younger than other"
@@ -140,8 +140,11 @@ class Observation:
         self.units = lab_units
 
 if __name__ == "__main__":
-    patient1 = Patient("1A8791E3-A61C-455A-8DEE-763EB90C9B2C", "Male", "1947-01-18 19:51:12.917000", "african")
-    patient2 = Patient("220C8D43-1322-4A9D-B890-D426942A3649", "Female", "1957-01-18 19:51:12.917000", "african")
+    """some examples"""
+    patient1 = Patient("1A8791E3-A61C-455A-8DEE-763EB90C9B2C", "Male", \
+        "1947-01-18 19:51:12.917000", "african")
+    patient2 = Patient("220C8D43-1322-4A9D-B890-D426942A3649", "Female", \
+        "1957-01-18 19:51:12.917000", "african")
     ob1 = Observation("14", 103.3, "mg/dL")
     #print(patient1.id)
     #print(patient1.gender)
@@ -150,10 +153,10 @@ if __name__ == "__main__":
     #print(ob1.id)
     #print(ob1.value)
     #print(ob1.units)
-    patient1.plot("URINALYSIS: RED BLOOD CELLS", "Urbc_over_time.png")
+    patient1.plot("URINALYSIS: RED BLOOD CELLS", "Urbc_overtime.png")
     #Patient("220C8D43-1322-4A9D-B890-D426942A3649", "Female", "1957-01-18 19:51:12.917000", "african").\
         #plot("URINALYSIS: PH", "ph_over_time.png")
-    patient2.plot("URINALYSIS: PH", "zh_over_time.png")
+    patient2.plot("URINALYSIS: PH", "Uph_over_time.png")
     #print(patient1 < 57.0)
-    #print(patient1 < patient2)
+    print(patient1 < patient2)
 
