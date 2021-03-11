@@ -3,6 +3,11 @@ from datetime import datetime
 import pandas as pd
 import matplotlib.pyplot as plt
 
+#read_in data frame
+#sort the date value: in chronological order:
+lab = pd.read_table("./LabsCorePopulatedTable.txt", delimiter = "\t")
+lab['LabDateTime']=pd.to_datetime(lab['LabDateTime'])
+lab.sort_values('LabDateTime',inplace=True)
 class Patient():
     """Class Patient"""
     def __init__(self, ID, sex, birth, race): 
@@ -47,33 +52,33 @@ class Patient():
                 return "first patient not younger than other"
         elif isinstance(other, float): # check other ===? float
             age1 = self.age
-            age2 = other.age 
+            age2 = other 
             if age1 < age2:
                 return "first patient younger than other"
             else:
                 return "first patient not younger than other"
         else:
             raise ValueError(f"{other} is not a 'Patient' or float")
-
-    
     def __gt__(self, other):
-        """working comparison operators for larger than '>'"""
+        """working comparison operators for less than '<'"""
         if isinstance(other, Patient): # check other ===? patient class
-            age1_sec = self.age.total_seconds()
-            age2_sec = other.age.total_seconds()
-            if age1_sec > age2_sec:
+            age1 = self.age
+            age2 = other.age
+            if age1 > age2:
                 return "first patient older than other"
             else:
                 return "first patient not older than other"
         elif isinstance(other, float): # check other ===? float
-            age1_sec = self.age.total_seconds()
-            age2_sec = other * 31536000 # change the year unit ===> second unit
-            if age1_sec > age2_sec:
+            age1 = self.age
+            age2 = other 
+            if age1 > age2:
                 return "first patient older than other"
             else:
                 return "first patient not older than other"
         else:
             raise ValueError(f"{other} is not a 'Patient' or float")
+
+    
     
     def plot(self, lab_name, picture_name):
         """plotting the graph: lab values over time"""
@@ -82,13 +87,6 @@ class Patient():
         if not isinstance(picture_name, str):
             raise ValueError(f"plot_name: {picture_name} should be a string")
         
-        #read_in data frame
-        lab = pd.read_table("./LabsCorePopulatedTable.txt", delimiter = "\t")
-
-        #sort the date value: in chronological order:
-        lab['LabDateTime']=pd.to_datetime(lab['LabDateTime'])
-        lab.sort_values('LabDateTime',inplace=True)
-
         #----filter the rows have for given patient id
         is_id = lab["PatientID"] == self.id 
         lab_select_id = lab[is_id] 
@@ -139,6 +137,17 @@ class Observation:
         self.value = lab_value
         self.units = lab_units
 
+#read in patient dataframe:
+pd = pd.read_table("./PatientCorePopulatedTable.txt", delimiter = "\t")
+
+# set patient dictionary: {id : Patient class}
+pdic = {}
+plist = list(pd["PatientID"])
+for i in range(0, len(plist)):
+    pdic[plist[i]] = Patient(pd["PatientID"][i], pd["PatientGender"][i], pd["PatientDateOfBirth"][i], \
+        pd["PatientRace"][i])
+
+
 if __name__ == "__main__":
     """some examples"""
     patient1 = Patient("1A8791E3-A61C-455A-8DEE-763EB90C9B2C", "Male", \
@@ -154,9 +163,24 @@ if __name__ == "__main__":
     #print(ob1.value)
     #print(ob1.units)
     patient1.plot("URINALYSIS: RED BLOOD CELLS", "Urbc_overtime.png")
-    #Patient("220C8D43-1322-4A9D-B890-D426942A3649", "Female", "1957-01-18 19:51:12.917000", "african").\
-        #plot("URINALYSIS: PH", "ph_over_time.png")
+    Patient("220C8D43-1322-4A9D-B890-D426942A3649", "Female", "1957-01-18 19:51:12.917000", "african").\
+        plot("URINALYSIS: PH", "ph_over_time.png")
     patient2.plot("URINALYSIS: PH", "Uph_over_time.png")
-    #print(patient1 < 57.0)
-    print(patient1 < patient2)
+    print(patient1 < 57.0) #===> output:first patient not younger than other
+    print(patient1 > patient2) #===> output: first patient older than other
+
+    print(pdic['FB2ABB23-C9D0-4D09-8464-49BF0B982F0F'].age) #=>73.2
+    print(pdic['DB92CDC6-FA9B-4492-BC2C-0C588AD78956'].age) #=>43.7
+
+    print(pdic['FB2ABB23-C9D0-4D09-8464-49BF0B982F0F'] > pdic['DB92CDC6-FA9B-4492-BC2C-0C588AD78956'])
+    #===>first patient older than other
+
+    print(pdic['FB2ABB23-C9D0-4D09-8464-49BF0B982F0F'] < 66.0)
+    #===>first patient not younger than other
+
+    pdic['FB2ABB23-C9D0-4D09-8464-49BF0B982F0F'].plot("URINALYSIS: RED BLOOD CELLS", "111.png")
+     
+
+
+
 
