@@ -1,6 +1,10 @@
 # Instructions: 
 This project builds two classes of patients, the first is Class_Patient, and the second is Class_Observation. Pdic is a dictionary to store all information of the patient_file, in the
 format: {patient id : Patient class}.
+## Version of code:
+ehr_analysis.py: is the edition of previous assignment
+<br>
+ehr_analysis3.py is the latest version(use class) edition
 ## Versions of package:
 pandas            1.2.2
 <br>
