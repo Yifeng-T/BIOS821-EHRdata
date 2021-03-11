@@ -8,6 +8,9 @@ import matplotlib.pyplot as plt
 lab = pd.read_table("./LabsCorePopulatedTable.txt", delimiter = "\t")
 lab['LabDateTime']=pd.to_datetime(lab['LabDateTime'])
 lab.sort_values('LabDateTime',inplace=True)
+#read in patient file:
+pd = pd.read_table("./PatientCorePopulatedTable.txt", delimiter = "\t")
+
 class Patient():
     """Class Patient"""
     def __init__(self, ID, sex, birth, race): 
@@ -137,9 +140,6 @@ class Observation:
         self.value = lab_value
         self.units = lab_units
 
-#read in patient dataframe:
-pd = pd.read_table("./PatientCorePopulatedTable.txt", delimiter = "\t")
-
 # set patient dictionary: {id : Patient class}
 pdic = {}
 plist = list(pd["PatientID"])
@@ -179,6 +179,7 @@ if __name__ == "__main__":
     #===>first patient not younger than other
 
     pdic['FB2ABB23-C9D0-4D09-8464-49BF0B982F0F'].plot("URINALYSIS: RED BLOOD CELLS", "111.png")
+    print(pdic['DB92CDC6-FA9B-4492-BC2C-0C588AD78956'].gender) #=>Male
      
 
 
