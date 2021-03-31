@@ -3,7 +3,7 @@ import datetime
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-# create database and initialize cursor
+# create database and initialize cursor.
 # patient db: con ||||| lab db: con2
 con = sqlite3.connect(":memory")
 cur = con.cursor()
