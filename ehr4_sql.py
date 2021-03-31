@@ -59,23 +59,32 @@ class Patient():
     def __init__(self, cursor, ID):  #time efficiency O(logn)
         """Initialize"""
         """define the instance attribute for ID, where ID is a input value"""
-        #define the date format:
-        date_format = '%Y-%m-%d %H:%M:%S.%f'
         if not isinstance(ID, str):
             raise ValueError(f"{ID} is not a string variable")
         self.cursor = cursor
         self.id = ID
-        cmd = f"SELECT patient.PatientGender FROM patient where PatientID = '{self.id}'"
-        cursor.execute(cmd)
-        self.gender = cur.fetchall()[0][0]
-        cmd = f"SELECT patient.PatientDateOfBirth FROM patient where PatientID = '{self.id}'"
-        cursor.execute(cmd)
-        birth = cur.fetchall()[0][0]
-        self.DOB = datetime.strptime(birth, date_format)
+
+    @property
+    def race(self):
         cmd = f"SELECT patient.PatientRace FROM patient where PatientID = '{self.id}'"
-        cursor.execute(cmd)
-        self.race = cur.fetchall()[0][0]
-        
+        self.cursor.execute(cmd)
+        return cur.fetchone()[0]
+
+    @property
+    def gender(self):
+        cmd = f"SELECT patient.PatientGender FROM patient where PatientID = '{self.id}'"
+        self.cursor.execute(cmd)
+        return cur.fetchone()[0]
+
+    @property
+    def DOB(self):
+        #define the date format:
+        date_format = '%Y-%m-%d %H:%M:%S.%f'
+        cmd = f"SELECT patient.PatientDateOfBirth FROM patient where PatientID = '{self.id}'"
+        self.cursor.execute(cmd)
+        birth = cur.fetchone()[0]
+        do = datetime.strptime(birth, date_format)
+        return do
     @property
     def Age(self):   #time efficiency: O(1)
         """define the property value: age"""
@@ -157,8 +166,8 @@ class Patient():
         cmd = f"SELECT distinct(lab.LabUnits) FROM lab \
             where (lab.PatientID = '{self.id}' and lab.LabName = '{lab_name}')"
         cur.execute(cmd)
-        c = cur.fetchall()
-        unit = c[0][0]
+        c = cur.fetchone()
+        unit = c[0]
 
         #define the X and Y values of plot:        
         Y = value
@@ -197,6 +206,8 @@ patient2 = Patient(cur, 'DB92CDC6-FA9B-4492-BC2C-0C588AD78956')
 observation1 = Observation(cur, 'DB92CDC6-FA9B-4492-BC2C-0C588AD78956')
 observation2 = Observation(cur, 'FB2ABB23-C9D0-4D09-8464-49BF0B982F0F')
 print(patient1.Age) #====>64.14
+print(patient1.DOB)
+print(patient1.race)
 print(patient1 > patient2) #===> true
 print(observation1.units[5][0]) 
 print(observation2.value[0][0])
