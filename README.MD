@@ -20,25 +20,47 @@ We bubild the Patient class based on this table:
 ```python
 class Patient():
     """Class Patient"""
-    def __init__(self, cursor, ID): 
+    def __init__(self, cursor, ID):  #time efficiency O(logn)
         """Initialize"""
         """define the instance attribute for ID, where ID is a input value"""
-        #define the date format:
-        date_format = '%Y-%m-%d %H:%M:%S.%f'
         if not isinstance(ID, str):
             raise ValueError(f"{ID} is not a string variable")
         self.cursor = cursor
         self.id = ID
-        cmd = f"SELECT patient.PatientGender FROM patient where PatientID = '{self.id}'"
-        cursor.execute(cmd)
-        self.gender = cur.fetchall()[0][0]
-        cmd = f"SELECT patient.PatientDateOfBirth FROM patient where PatientID = '{self.id}'"
-        cursor.execute(cmd)
-        birth = cur.fetchall()[0][0]
-        self.DOB = datetime.strptime(birth, date_format)
+
+    @property
+    def race(self):
         cmd = f"SELECT patient.PatientRace FROM patient where PatientID = '{self.id}'"
-        cursor.execute(cmd)
-        self.race = cur.fetchall()[0][0]
+        self.cursor.execute(cmd)
+        return cur.fetchone()[0]
+
+    @property
+    def gender(self):
+        cmd = f"SELECT patient.PatientGender FROM patient where PatientID = '{self.id}'"
+        self.cursor.execute(cmd)
+        return cur.fetchone()[0]
+
+    @property
+    def DOB(self):
+        #define the date format:
+        date_format = '%Y-%m-%d %H:%M:%S.%f'
+        cmd = f"SELECT patient.PatientDateOfBirth FROM patient where PatientID = '{self.id}'"
+        self.cursor.execute(cmd)
+        birth = cur.fetchone()[0]
+        do = datetime.strptime(birth, date_format)
+        return do
+    @property
+    def Age(self):   #time efficiency: O(1)
+        """define the property value: age"""
+        #define the date format:
+        date_format = '%Y-%m-%d %H:%M:%S.%f'
+        #define the current date:
+        current_date = datetime.today().strftime('%Y-%m-%d %H:%M:%S.%f')
+        current_date = datetime.strptime(current_date, date_format)
+        # self.age is a time value
+        total_age = current_date - self.DOB
+        age = round(total_age.days/365.25, 2)
+        return age
 ```
 Patient class also has age property, function of : less_than, greater_than, plot
 ## Here is a breif show of the lab table:
