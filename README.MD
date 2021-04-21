@@ -1,53 +1,57 @@
-ehr_analysis instructions: for biostat821 assignment
+# how to run the file:
+We need a main.sh file including:  
+<br>
+export $(egrep -v '^#' .env | xargs)  
+<br>
+uvicorn ehr_analysis:APP --host 0.0.0.0 --port 8105 --reload
+<br>  
+Then we run: chmod +x main.sh in terminal
+<br>
+run: ./main.sh in terminal
 
---------------------------------------------------------------
-For endusers:
-There are total five functions, they are:
-1.load_patients(name)  
-2.num_older_than(patients, age) 
-3.load_labs(name) 
-4.sick_patients(lab_infor, lab, gt_lt, value)
-5.get_age(birth)
+# There are some functions of this file:
 
-1.for load_patients(name):
-The function input value should be a string value, which indicates the file name.
-And the function produces a list of datebirth of patients whose information are in the "name" file
+* uploading patients and labs files by providing URLs
+```bash
+> curl -X POST http://localhost/patients -d "{\"url\": \"http://biostat821.colab.duke.edu/patients.txt\"}"
+> curl -X POST http://localhost/labs -d "{\"url\": \"http://biostat821.colab.duke.edu/labs.txt\"}"
+```
 
-example:
-load_patients('PatientCorePopulatedTable.txt')[0] =====> '1947-12-28 02:45:40.547'
+* accessing specific patients by providing their ids
+  ```bash
+  > curl -X GET http://localhost/patients/FB2ABB23-C9D0-4D09-8464-49BF0B982F0F
+  {
+    "gender": "Male",
+    "DOB": "1947-12-28 02:45:40.547",
+    "race": "Unknown",
+    "marital_status": "Married",
+    "language": "Icelandic",
+    "population_percentage_below_poverty": 18.08
+  }
+  ```
 
-2.num_older_than(patients, age):
-The function input values should be a: exact patients variable (which is defined by load_patients function with given file) and b: a number value. The function produces the number of patients in the file you given with whose age are greater than the value age. 
+* accessing labs belonging to each patient
+  ```bash
+  > curl -X GET http://localhost/patients/FB2ABB23-C9D0-4D09-8464-49BF0B982F0F/labs
+  [
+    {
+      "admission_id": 1,
+      "name": "URINALYSIS: RED BLOOD CELLS",
+      "value": 3.1,
+      "units": "rbc/hpf",
+      "datetime": "1968-10-07 14:41:30.843"
+    },
+    ...
+  ]
+  ```
 
-example:
-print(num_older_than(patients, 51.2)) ====> 75
-
-3.load_labs(name):
-The function input value should be a string value, which indicates the file name.
-And the function produces a list contains three lists. The first list contains the patients_id(string value), the second list contains patients_lab_name, and the third list contains the patients_lab_result(result is a numeric value). 
-
-example:
-print(len(load_labs('LabsCorePopulatedTable.txt'))) =====> 3
-print(len(load_labs('LabsCorePopulatedTable.txt')[0])) =======> 111483
-print(load_labs('LabsCorePopulatedTable.txt')[0][0]) =========> '1A8791E3-A61C-455A-8DEE-763EB90C9B2C'
-
-
-4.sick_patients(lab_infor, lab, gt_lt, value):
-The function produces all the patients_ids in the given file whose specific lab test results satisfy gt_lt the value variable. 
-The function input values have 4 variables, a: lab_infor is a list produced by function: load_labs, b:lab is a string value, which indicates which lab you are interested, c: a string value '>' or '<', indicates you want to know the patients results greater or less than given value. d:value should be a number value.
-
-example:
-print(len(sick_patients(lab_infor, "METABOLIC: ALBUMIN", ">", 4.0))) =====> 100
-
-
-5.get_age(birth):
-The function calculates the age given a birth_date, the birth should be a string value with:
-'%Y-%m-%d %H:%M:%S.%f' date format. 
-
-
------------------------------------------------
-For contributors:
-there are some tests in test_egr_analysis file. 
+* other analytics capabilities
+  ```bash
+  > curl -X GET http://localhost/num_older_than?age=51.2
+  54
+  > curl -X GET http://localhost/sick_patients?lab_name=METABOLIC%3A%20ALBUMIN&operator=%3C&lab_value=4.0
+  ["FB2ABB23-C9D0-4D09-8464-49BF0B982F0F", "64182B95-EB72-4E2B-BE77-8050B71498CE"]
+  ```
 
 
 
